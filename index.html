@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Asul:700|Roboto|Work+Sans|Rubik:700" rel="stylesheet">
+  <link href="css/LogoLoop.css" rel="stylesheet">
+  <link href="css/PixelTransition.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <style>
@@ -2205,23 +2207,7 @@
 
         <div class="led-board">
           <div class="skills-track" id="skillsTrack">
-            <button class="skill-btn" data-skill="java">JAVA</button>
-            <button class="skill-btn" data-skill="python">PYTHON</button>
-            <button class="skill-btn" data-skill="uiux">UI/UX</button>
-            <button class="skill-btn" data-skill="javascript">JAVASCRIPT</button>
-            <button class="skill-btn" data-skill="c">C</button>
-            <button class="skill-btn" data-skill="html">HTML</button>
-            <button class="skill-btn" data-skill="css">CSS</button>
-            <button class="skill-btn" data-skill="react">REACT</button>
-
-            <button class="skill-btn" data-skill="java">JAVA</button>
-            <button class="skill-btn" data-skill="python">PYTHON</button>
-            <button class="skill-btn" data-skill="uiux">UI/UX</button>
-            <button class="skill-btn" data-skill="javascript">JAVASCRIPT</button>
-            <button class="skill-btn" data-skill="c">C</button>
-            <button class="skill-btn" data-skill="html">HTML</button>
-            <button class="skill-btn" data-skill="css">CSS</button>
-            <button class="skill-btn" data-skill="react">REACT</button>
+            <!-- LogoLoop will mount here -->
           </div>
         </div>
       </div>
@@ -2259,49 +2245,57 @@
 
         <div class="projects-grid">
           <!-- Project 1: Music App -->
-          <div class="project-card-new">
-            <div class="project-image-wrapper">
-              <img src="Bindass.png" alt="Music App Project" class="project-image-new">
+          <div class="project-card-new pixel-card" style="height: 350px;">
+            <div class="pixelated-image-card__default">
+              <img src="Bindass.png" alt="Music App Project" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
-            <div class="project-info">
-              <h3 class="project-name">MUSIC APP</h3>
-              <div class="bar-lines"><span></span><span></span><span></span></div>
-              <p class="project-desc">A modern music streaming application with intuitive UI and personalized playlists
-                for seamless listening experience.</p>
-              <a href="https://www.linkedin.com/posts/chikkala-venkata-surya-vignesh-82690631b_uiuxdesign-productdesign-musicapp-activity-7402325095362232320-05jF?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFEdSR4B7aGjWaK7rEdaxdx25LyPu5fm6sU"
-                target="_blank" class="project-view-btn">View project</a>
+            <div class="pixelated-image-card__active">
+              <div class="project-info">
+                <h3 class="project-name">MUSIC APP</h3>
+                <div class="bar-lines"><span></span><span></span><span></span></div>
+                <p class="project-desc">A modern music streaming application with intuitive UI and personalized
+                  playlists for seamless listening experience.</p>
+                <a href="https://www.linkedin.com/posts/chikkala-venkata-surya-vignesh-82690631b_uiuxdesign-productdesign-musicapp-activity-7402325095362232320-05jF?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFEdSR4B7aGjWaK7rEdaxdx25LyPu5fm6sU"
+                  target="_blank" class="project-view-btn">View project</a>
+              </div>
             </div>
+            <div class="pixelated-image-card__pixels"></div>
           </div>
 
           <!-- Project 2: Sanskriti -->
-          <div class="project-card-new">
-            <div class="project-image-wrapper">
-              <img src="San.png" alt="Sanskriti Project" class="project-image-new">
+          <div class="project-card-new pixel-card" style="height: 350px;">
+            <div class="pixelated-image-card__default">
+              <img src="San.png" alt="Sanskriti Project" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
-            <div class="project-info">
-              <h3 class="project-name">SANSKRITI</h3>
-              <div class="bar-lines"><span></span><span></span><span></span></div>
-              <p class="project-desc">Cultural web platform celebrating Indian heritage through music, dance,
-                documentaries, and live experiences.</p>
-              <a href="https://my-site-kd37rpqd-venkatasuryavignes.wix-vibe.com" target="_blank"
-                class="project-view-btn">View project</a>
+            <div class="pixelated-image-card__active">
+              <div class="project-info">
+                <h3 class="project-name">SANSKRITI</h3>
+                <div class="bar-lines"><span></span><span></span><span></span></div>
+                <p class="project-desc">Cultural web platform celebrating Indian heritage through music, dance,
+                  documentaries, and live experiences.</p>
+                <a href="https://my-site-kd37rpqd-venkatasuryavignes.wix-vibe.com" target="_blank"
+                  class="project-view-btn">View project</a>
+              </div>
             </div>
+            <div class="pixelated-image-card__pixels"></div>
           </div>
 
           <!-- Project 3: Crack UI -->
-          <div class="project-card-new">
-            <div class="project-image-wrapper">
-              <!-- Using a placeholder or reusing an image if specific one not available, user can replace -->
-              <img src="Crack.png" alt="Crack UI Project" class="project-image-new">
+          <div class="project-card-new pixel-card" style="height: 350px;">
+            <div class="pixelated-image-card__default">
+              <img src="Crack.png" alt="Crack UI Project" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
-            <div class="project-info">
-              <h3 class="project-name">CRACK AI</h3>
-              <div class="bar-lines"><span></span><span></span><span></span></div>
-              <p class="project-desc">A glassmorphism-inspired UI component library designed for modern, sleek, and
-                high-performance web applications.</p>
-              <a href="https://www.linkedin.com/posts/chikkala-venkata-surya-vignesh-82690631b_python-flask-generativeai-activity-7415690027587776512-rXt_?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFEdSR4B7aGjWaK7rEdaxdx25LyPu5fm6sU"
-                class="project-view-btn">View project</a>
+            <div class="pixelated-image-card__active">
+              <div class="project-info">
+                <h3 class="project-name">CRACK AI</h3>
+                <div class="bar-lines"><span></span><span></span><span></span></div>
+                <p class="project-desc">A glassmorphism-inspired UI component library designed for modern, sleek, and
+                  high-performance web applications.</p>
+                <a href="https://www.linkedin.com/posts/chikkala-venkata-surya-vignesh-82690631b_python-flask-generativeai-activity-7415690027587776512-rXt_?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFEdSR4B7aGjWaK7rEdaxdx25LyPu5fm6sU"
+                  class="project-view-btn">View project</a>
+              </div>
             </div>
+            <div class="pixelated-image-card__pixels"></div>
           </div>
         </div>
       </div>
@@ -2863,6 +2857,103 @@
     console.log('%c Custom Gooey Cursor Animation Active! ', 'color: #764ba2; font-size: 12px; padding: 5px;');
     console.log('%c✓ Portfolio Loaded Successfully!', 'background: #4CAF50; color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px;');
 
+  </script>
+  <script src="js/LogoLoop.js"></script>
+  <script src="js/PixelTransition.js"></script>
+  <script>
+    // Initialize PixelTransition
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.pixel-card').forEach(card => {
+        new PixelTransition(card, {
+          gridSize: 10,
+          pixelColor: '#fff', // White pixels for flash effect, or match theme
+          animationStepDuration: 0.4
+        });
+      });
+    });
+
+    // Initialize LogoLoop
+    document.addEventListener('DOMContentLoaded', () => {
+      // Existing skills to preserve popup functionality
+      const skillsList = [
+        { id: 'java', title: 'JAVA' },
+        { id: 'python', title: 'PYTHON' },
+        { id: 'uiux', title: 'UI/UX' },
+        { id: 'javascript', title: 'JAVASCRIPT' },
+        { id: 'c', title: 'C' },
+        { id: 'html', title: 'HTML' },
+        { id: 'css', title: 'CSS' },
+        { id: 'react', title: 'REACT' }
+      ];
+
+      // New Tech Logos (Icons) requested by user
+      const techLogos = [
+        // Using simple icons CDN for the requested logos
+        { src: "https://cdn.simpleicons.org/react/white", title: "React", href: "https://react.dev" },
+        { src: "https://cdn.simpleicons.org/nextdotjs/white", title: "Next.js", href: "https://nextjs.org" },
+        { src: "https://cdn.simpleicons.org/typescript/white", title: "TypeScript", href: "https://www.typescriptlang.org" },
+        { src: "https://cdn.simpleicons.org/tailwindcss/white", title: "Tailwind CSS", href: "https://tailwindcss.com" }
+      ];
+
+      // Combine them: We'll show the text buttons primarily (for info) and maybe intersperse icons or just use text buttons.
+      // To strictly follow "use this animations" and enable popups, we use the text buttons as the "nodes".
+
+      const logos = skillsList.map(skill => ({
+        // We wrap the button HTML in the 'node' property
+        node: `<button class="skill-btn" data-skill="${skill.id}" style="pointer-events: auto;">${skill.title}</button>`
+      }));
+
+      // We can also append the tech logos if desired, but sticking to the existing skills for consistency first.
+      // logos.push(...techLogos); // Uncomment to mix in icons
+
+      const loop = new LogoLoop('#skillsTrack', {
+        logos: logos,
+        speed: 50, // Adjusted speed
+        direction: 'left',
+        logoHeight: 60,
+        gap: 60,
+        pauseOnHover: true,
+        hoverSpeed: 0,
+        scaleOnHover: true,
+        fadeOut: true,
+        fadeOutColor: '#000000',
+      });
+
+      // Delegated Event Listener for Skill Popups
+      // This is necessary because the buttons are created dynamically by LogoLoop, 
+      // avoiding the empty NodeList issue with the original script.
+      const track = document.getElementById('skillsTrack');
+      if (track) {
+        track.addEventListener('click', (e) => {
+          const btn = e.target.closest('.skill-btn');
+          if (btn) {
+            // Access global variables from the main script
+            // We assume skillsData, popup, etc. are available in the global scope
+            // Check if they are defined
+            if (typeof skillsData !== 'undefined' && typeof popup !== 'undefined') {
+              const skill = btn.dataset.skill;
+              const skillInfo = skillsData[skill];
+
+              if (skillInfo) {
+                popupTitle.textContent = skillInfo.title;
+                popupLevel.textContent = skillInfo.level;
+
+                popupDetails.innerHTML = '';
+                skillInfo.details.forEach(detail => {
+                  const item = document.createElement('div');
+                  item.className = 'popup-item';
+                  item.textContent = detail;
+                  popupDetails.appendChild(item);
+                });
+
+                popup.classList.add('active');
+                popupOverlay.classList.add('active');
+              }
+            }
+          }
+        });
+      }
+    });
   </script>
 </body>
 

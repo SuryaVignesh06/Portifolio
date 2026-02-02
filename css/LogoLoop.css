@@ -1,0 +1,105 @@
+.logoloop {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  height: auto;
+  /* Default variables if not set via inline style */
+  --logoloop-gap: 32px;
+  --logoloop-logoHeight: 28px;
+}
+
+.logoloop__track {
+  display: flex;
+  width: auto;
+  will-change: transform;
+  /* Hardware acceleration */
+  transform: translate3d(0, 0, 0);
+}
+
+.logoloop__list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  gap: var(--logoloop-gap);
+  padding-right: var(--logoloop-gap); /* Add gap to the end of the list to maintain spacing between copies */
+  align-items: center;
+}
+
+.logoloop__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logoloop__item img {
+  height: var(--logoloop-logoHeight);
+  width: auto;
+  display: block;
+}
+
+.logoloop__node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--logoloop-logoHeight);
+  font-size: var(--logoloop-logoHeight);
+  color: inherit;
+}
+
+.logoloop__node svg {
+  width: auto;
+  height: 100%;
+  fill: currentColor;
+}
+
+.logoloop__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.logoloop__link:hover {
+  opacity: 0.8;
+}
+
+/* Vertical Modifier */
+.logoloop--vertical {
+  flex-direction: column;
+}
+
+.logoloop--vertical .logoloop__track {
+  flex-direction: column;
+}
+
+.logoloop--vertical .logoloop__list {
+  flex-direction: column;
+  padding-right: 0;
+  padding-bottom: var(--logoloop-gap);
+}
+
+/* Fade Modifier */
+.logoloop--fade {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.logoloop--vertical.logoloop--fade {
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+/* Scale on Hover Modifier */
+.logoloop--scale-hover .logoloop__item {
+  transition: transform 0.3s ease;
+}
+
+.logoloop--scale-hover .logoloop__item:hover {
+  transform: scale(1.1);
+}

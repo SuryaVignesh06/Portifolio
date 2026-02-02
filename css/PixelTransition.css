@@ -1,0 +1,52 @@
+.pixelated-image-card {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: #2a292b;
+    /* Match project card bg */
+    border-radius: 15px;
+    /* Match project image wrapper border radius */
+}
+
+.pixelated-image-card__default,
+.pixelated-image-card__active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+}
+
+.pixelated-image-card__default {
+    z-index: 1;
+}
+
+.pixelated-image-card__active {
+    z-index: 2;
+    display: none;
+    /* Hidden by default */
+    background-color: #000000;
+    /* Dark background for the text layer */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pixelated-image-card__pixels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.pixelated-image-card__pixel {
+    position: absolute;
+    display: none;
+}
