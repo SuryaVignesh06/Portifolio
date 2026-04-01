@@ -1,7 +1,7 @@
 /**
  * pageTransition.js
- * Circular iris-wipe from click point → Black screen → Typing animation
- * → Navigate to destination page.
+ * Circular iris-wipe from click point → Black screen → Bebas Neue
+ * dual-line typing animation ("WELCOME TO" then "MY WORLD") → 2s pause → navigate.
  */
 
 (function () {
@@ -17,20 +17,19 @@
       align-items: center;
       justify-content: center;
       pointer-events: none;
-      opacity: 0;
-      /* clip-path animated by JS */
+      opacity: 1;
+      clip-path: circle(0% at 50% 50%);
     }
 
     #pt-overlay.active {
       pointer-events: all;
-      opacity: 1;
     }
 
     #pt-text-wrap {
       text-align: center;
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.45s ease, transform 0.45s ease;
+      transform: translateY(22px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
     #pt-overlay.text-visible #pt-text-wrap {
@@ -38,54 +37,62 @@
       transform: translateY(0);
     }
 
-    #pt-sub {
+    /* ── Line 1: "WELCOME TO" ── */
+    #pt-line1 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
       letter-spacing: 0.55em;
       color: rgba(255,255,255,0.45);
       text-transform: uppercase;
-      margin-bottom: 0.4rem;
       display: block;
+      margin-bottom: 0.25rem;
+      min-height: 1.8em;
     }
 
-    #pt-main {
+    /* ── Line 2: "MY WORLD" ── */
+    #pt-line2 {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3.5rem, 9vw, 7.5rem);
-      letter-spacing: 0.06em;
+      font-size: clamp(4rem, 12vw, 10rem);
+      letter-spacing: 0.07em;
       color: #fff;
       line-height: 0.88;
       text-transform: uppercase;
-      white-space: nowrap;
       display: block;
+      min-height: 1em;
     }
 
-    #pt-cursor {
+    /* ── Blinking cursor ── */
+    .pt-caret {
       display: inline-block;
       width: 3px;
-      height: 0.85em;
+      height: 0.82em;
       background: #eb7a14;
-      margin-left: 6px;
+      margin-left: 5px;
       vertical-align: middle;
-      animation: ptBlink 0.7s step-end infinite;
+      border-radius: 1px;
+      animation: ptCaret 0.65s step-end infinite;
     }
 
-    @keyframes ptBlink {
+    @keyframes ptCaret {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0; }
     }
 
+    /* ── Eyes ── */
     #pt-eyes {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-size: clamp(2rem, 5vw, 3.8rem);
       display: block;
-      margin-bottom: 1rem;
+      margin-bottom: 1.1rem;
       opacity: 0;
-      transform: scale(0.7);
-      transition: opacity 0.35s ease 0.1s, transform 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.1s;
+      transform: scale(0.6) translateY(8px);
+      transition: opacity 0.4s ease 0.05s,
+                  transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s;
+      user-select: none;
     }
 
     #pt-overlay.text-visible #pt-eyes {
       opacity: 1;
-      transform: scale(1);
+      transform: scale(1) translateY(0);
     }
   `;
   document.head.appendChild(style);
@@ -96,70 +103,76 @@
   overlay.innerHTML = `
     <div id="pt-text-wrap">
       <span id="pt-eyes">👀</span>
-      <span id="pt-sub">Welcome to</span>
-      <span id="pt-main"><span id="pt-typed"></span><span id="pt-cursor"></span></span>
+      <span id="pt-line1"><span id="pt-typed1"></span><span class="pt-caret" id="pt-caret1"></span></span>
+      <span id="pt-line2"><span id="pt-typed2"></span><span class="pt-caret" id="pt-caret2" style="display:none;"></span></span>
     </div>
   `;
   document.body.appendChild(overlay);
 
-  const typedEl  = document.getElementById('pt-typed');
-  const cursorEl = document.getElementById('pt-cursor');
+  const typed1  = document.getElementById('pt-typed1');
+  const typed2  = document.getElementById('pt-typed2');
+  const caret1  = document.getElementById('pt-caret1');
+  const caret2  = document.getElementById('pt-caret2');
 
   // ── Typing engine ─────────────────────────────────────────────────────────
-  const FULL_TEXT = 'MY WORLD';
-
-  function typeText(onDone) {
+  function typeString(el, text, speed, onDone) {
     let i = 0;
-    typedEl.textContent = '';
+    el.textContent = '';
     const iv = setInterval(() => {
-      typedEl.textContent = FULL_TEXT.slice(0, ++i);
-      if (i >= FULL_TEXT.length) {
+      el.textContent = text.slice(0, ++i);
+      if (i >= text.length) {
         clearInterval(iv);
-        onDone && setTimeout(onDone, 420); // short pause after done
+        if (onDone) setTimeout(onDone, 180);
       }
-    }, 90); // typing speed per character
+    }, speed);
   }
 
-  // ── Circular iris wipe ───────────────────────────────────────────────────
-  // Uses clip-path: circle() expanding from click origin
-  function irisFill(originX, originY, onComplete) {
-    // Convert page coords → % relative to viewport
-    const pctX = ((originX / window.innerWidth)  * 100).toFixed(1) + '%';
-    const pctY = ((originY / window.innerHeight) * 100).toFixed(1) + '%';
+  // ── Iris fill ─────────────────────────────────────────────────────────────
+  function irisFill(ox, oy, onComplete) {
+    const pctX = ((ox / window.innerWidth)  * 100).toFixed(2) + '%';
+    const pctY = ((oy / window.innerHeight) * 100).toFixed(2) + '%';
 
-    // Final radius must cover the farthest corner
     const maxR = Math.hypot(
-      Math.max(originX, window.innerWidth  - originX),
-      Math.max(originY, window.innerHeight - originY)
+      Math.max(ox, window.innerWidth  - ox),
+      Math.max(oy, window.innerHeight - oy)
     );
-    const finalR = (maxR / Math.min(window.innerWidth, window.innerHeight) * 100 + 10).toFixed(1) + '%';
+    const finalR = ((maxR / Math.min(window.innerWidth, window.innerHeight)) * 110).toFixed(2) + '%';
 
     overlay.classList.add('active');
     overlay.style.clipPath = `circle(0% at ${pctX} ${pctY})`;
+    overlay.getBoundingClientRect(); // force reflow
 
-    // Force reflow then animate
-    overlay.getBoundingClientRect();
-
-    overlay.style.transition = `clip-path 0.65s cubic-bezier(0.76, 0, 0.24, 1)`;
+    overlay.style.transition = `clip-path 0.7s cubic-bezier(0.76, 0, 0.24, 1)`;
     overlay.style.clipPath    = `circle(${finalR} at ${pctX} ${pctY})`;
 
-    setTimeout(onComplete, 680);
+    setTimeout(onComplete, 730);
   }
 
-  // ── Main transition entry ─────────────────────────────────────────────────
-  function playTransition(destination, clickX, clickY) {
-    typedEl.textContent = '';
+  // ── Main transition ───────────────────────────────────────────────────────
+  function playTransition(destination, cx, cy) {
+    // Reset
+    typed1.textContent = '';
+    typed2.textContent = '';
+    caret1.style.display = 'inline-block';
+    caret2.style.display = 'none';
 
-    irisFill(clickX, clickY, () => {
-      // Show text
+    irisFill(cx, cy, () => {
+      // Reveal text container
       overlay.classList.add('text-visible');
 
-      // Start typing
-      typeText(() => {
-        // Wait a beat, then navigate
-        setTimeout(() => {
-          window.location.href = destination;
-        }, 350);
+      // Step 1: type "WELCOME TO" on line 1
+      typeString(typed1, 'WELCOME TO', 75, () => {
+        // Move caret to line 2
+        caret1.style.display = 'none';
+        caret2.style.display = 'inline-block';
+
+        // Step 2: type "MY WORLD" on line 2
+        typeString(typed2, 'MY WORLD', 95, () => {
+          // Step 3: hold for 2.2s, then navigate
+          setTimeout(() => {
+            window.location.href = destination;
+          }, 2200);
+        });
       });
     });
   }
@@ -177,14 +190,11 @@
     e.stopPropagation();
 
     const rect = link.getBoundingClientRect();
-    const cx   = rect.left + rect.width  / 2;
-    const cy   = rect.top  + rect.height / 2;
-
-    playTransition(href, cx, cy);
+    playTransition(href, rect.left + rect.width / 2, rect.top + rect.height / 2);
   }, true);
 
-  // ── Also intercept programmatic clicks (e.g. startWorksTransition) ──────
-  window._playPageTransition = function(destination, x, y) {
+  // ── Global API for programmatic navigation ────────────────────────────────
+  window._playPageTransition = function (destination, x, y) {
     playTransition(
       destination,
       x != null ? x : window.innerWidth  / 2,
