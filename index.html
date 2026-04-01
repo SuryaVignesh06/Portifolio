@@ -1175,6 +1175,28 @@
       padding-right: 2vw;
     }
 
+    /* Hero Logo Styling */
+    .hero-brand-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(80px, 20vw, 220px);
+      /* Progressive sizing */
+      height: auto;
+      z-index: 10;
+      filter: drop-shadow(0 0 20px rgba(235, 122, 20, 0.4));
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .hero-brand-logo {
+        top: 45%;
+        width: 100px;
+      }
+    }
+
     .hero-massive-overlay.outline h2 {
       color: transparent;
       -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.8);
@@ -1210,18 +1232,26 @@
 
     .hero-right-text {
       position: absolute;
-      bottom: 60px;
-      left: -3%;
+      bottom: 80px; /* Slight lift for better framing */
+      left: 5%; /* Fix: Moved from -3% into the frame */
       z-index: 10;
-      max-width: 28%;
-      /* Hard stop at 28vw — image starts at 50% center */
+      max-width: 450px; /* Specific width for perfect alignment */
       text-align: left;
-      font-size: 1rem;
+      font-size: 1.1rem; /* Slightly larger for clarity */
       line-height: 1.6;
       color: rgba(0, 0, 0, 0.7);
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    @media (max-width: 768px) {
+      .hero-right-text {
+        left: 5%;
+        max-width: 90%;
+        bottom: 40px;
+        font-size: 0.95rem;
+      }
     }
 
     .hero-name {
@@ -3297,7 +3327,7 @@
           <div class="hero-tagline-small">
             <span class="typewriter-text"></span><span class="typewriter-cursor">|</span>
           </div>
-          <p>Results-driven CS undergraduate specialising in AI/ML &mdash; building real-world intelligent applications
+          <p>lts-driven CS undergraduate specialising in AI/ML &mdash; building real-world intelligent applications
             using Python, Flask, Gemini AI, NLP, and machine learning.</p>
         </div>
 
