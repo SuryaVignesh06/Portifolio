@@ -81,8 +81,8 @@
       once: true,
       onEnter: () => {
         gsap.fromTo(aboutH2,
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 0.9, ease: 'power4.out' }
+          { opacity: 0, y: 60 },
+          { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out' }
         );
       }
     });
@@ -99,8 +99,8 @@
       once: true,
       onEnter: () => {
         gsap.fromTo(aboutSubtitle,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.15 }
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.2 }
         );
       }
     });
@@ -180,8 +180,8 @@
       once: true,
       onEnter: () => {
         gsap.fromTo(skillsTitle,
-          { opacity: 0, y: 60, scale: 0.88 },
-          { opacity: 1, y: 0, scale: 1, duration: 1, ease: 'elastic.out(1, 0.65)' }
+          { opacity: 0, y: 80, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 1.5, ease: 'expo.out' }
         );
       }
     });
@@ -254,8 +254,8 @@
         once: true,
         onEnter: () => {
           gsap.fromTo(expHeading,
-            { opacity: 0, x: -60 },
-            { opacity: 1, x: 0, duration: 0.9, ease: 'power4.out' }
+            { opacity: 0, y: 50 },
+            { opacity: 1, y: 0, duration: 1.4, ease: 'expo.out' }
           );
         }
       });

@@ -20,6 +20,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script> 
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.20/dist/lenis.css">
   <style>
     /* ========== GOOEY CURSOR ANIMATION STYLES ========== */
     * {
@@ -737,34 +739,63 @@
     }
 
     /* Bottom Navigation (Skeuomorphic) */
+    /* Reduced Nav Bar Size for sleek "Control Chip" feel */
     .bottom-nav {
       position: fixed;
-      bottom: 12px;
+      bottom: 25px;
       left: 50% !important;
       transform: translateX(-50%) translateY(80px) translateZ(0) !important;
-      /* Include GPU hint here */
       background: linear-gradient(180deg, rgba(253, 253, 253, 0.85) 0%, rgba(224, 224, 224, 0.85) 100%);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(179, 179, 179, 0.6);
-      border-top: 1px solid rgba(255, 255, 255, 0.8);
-      border-bottom: 1px solid rgba(153, 153, 153, 0.6);
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.18),
-        0 2px 8px rgba(0, 0, 0, 0.08),
-        inset 0 2px 4px rgba(255, 255, 255, 0.8),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
       border-radius: 999px;
-      padding: 10px 20px;
+      padding: 6px 12px; /* Final reduced padding */
       z-index: 9999;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 3px; /* Reduced gap */
       opacity: 0;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       backface-visibility: hidden;
-      margin: 0 !important;
     }
+
+    .nav-item {
+      padding: 6px 14px; /* Reduced internal padding */
+      border-radius: 999px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem; /* Slightly smaller font */
+      letter-spacing: 0.08em;
+      color: #333;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    /* Radeski-style Sticky Stacking */
+    .sticky-stack {
+      position: sticky !important;
+      top: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: white;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    /* Vertical stacking order (Z-index layering) */
+    #home { z-index: 1; }
+    #about { z-index: 2; }
+    #skills { z-index: 3; }
+    #certifications { z-index: 4; }
+    #projects { z-index: 5; }
+    #experience { z-index: 6; }
+    #footerSection { z-index: 10; position: relative; }
 
     /* Full realistic "Liquid Glass" blur extending to side edges and downwards */
     .bottom-nav::before {
@@ -1613,7 +1644,7 @@
 
     /* Section Styles */
     section {
-      min-height: 70vh;
+      min-height: 100vh; /* Unified for stacking */
       padding: 4rem 5%;
       display: flex;
       align-items: center;
@@ -3356,7 +3387,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about-3d-section bg-[#f2f2f2] pb-12">
+    <section id="about" class="sticky-stack about-3d-section bg-[#f2f2f2] pb-12">
       <div
         class="about-3d-container w-[92%] max-w-none mx-auto flex flex-col lg:flex-row items-center justify-between py-16 lg:py-20 lg:gap-12">
 
@@ -3572,8 +3603,7 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="skills"
-      class="py-24 bg-white text-black overflow-hidden relative border-t border-b border-black/[0.08]">
+    <section id="skills" class="sticky-stack">
       <!-- Skills Section Heading -->
       <div class="skills-container text-center mb-16 mx-auto w-full">
         <p class="text-xs font-bold tracking-[0.4em] text-[#111] mb-4 font-poppins" style="text-transform:uppercase;">/
@@ -3673,9 +3703,7 @@
     </section>
 
     <!-- ========== CERTIFICATIONS SECTION (GRID MOTION V2) ========== -->
-    <section id="certifications"
-      class="py-24 bg-white relative overflow-hidden flex items-center justify-center border-t border-b border-black/[0.08]"
-      style="height: 120vh; max-height: 1200px;">
+    <section id="certifications" class="sticky-stack">
 
       <!-- Central Title Overlay -->
       <div
@@ -3867,7 +3895,7 @@
 
 
     <!-- ========== PROFESSIONAL PROJECTS SECTION ========== -->
-    <section id="projects" class="bg-[#f2f2f2] pt-20">
+    <section id="projects" class="sticky-stack" style="background: #f2f2f2; padding-top: 5rem;">
       <div class="projects-container-new">
         <div class="flex flex-col w-full max-w-[1200px] mx-auto px-4 mb-8">
           <!-- Work Samples Heading -->
@@ -4045,7 +4073,7 @@
   </section>
 
   <!-- PROFESSIONAL EXPERIENCE -->
-  <section id="experience" class="py-24 relative z-10"
+  <section id="experience" class="sticky-stack py-24 relative z-10"
     style="background: #f2f2f2; border-top: 1px solid rgba(0,0,0,0.08);">
     <div class="w-full max-w-[1200px] mx-auto px-4">
 
@@ -5639,6 +5667,32 @@
 
   <!-- Cinematic Page Transition Overlay -->
   <script src="js/pageTransition.js"></script>
+
+  <!-- Smooth Scroll Initialization (Lenis) -->
+  <script>
+    if (typeof Lenis !== 'undefined') {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: 1.1,
+        smoothTouch: false,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // Connect to GSAP ScrollTrigger
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+    }
+  </script>
 </body>
 
 </html>
