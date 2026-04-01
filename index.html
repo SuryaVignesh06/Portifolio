@@ -1232,25 +1232,32 @@
 
     .hero-right-text {
       position: absolute;
-      bottom: 80px; /* Slight lift for better framing */
-      left: 5%; /* Fix: Moved from -3% into the frame */
-      z-index: 10;
-      max-width: 450px; /* Specific width for perfect alignment */
-      text-align: left;
-      font-size: 1.1rem; /* Slightly larger for clarity */
-      line-height: 1.6;
-      color: rgba(0, 0, 0, 0.7);
+      bottom: 15%; /* Elevated slightly to clear the pill nav and overlay the photo nicely */
+      left: 50%;
+      transform: translate(-50%, 40px); /* Pre-animation position */
+      z-index: 100 !important; /* Force above all other hero layers */
+      max-width: 550px;
+      text-align: center;
+      font-size: 0.82rem; /* Decreased as requested */
+      line-height: 1.8;
+      color: #000; /* Solid high-contrast black */
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); /* Contrast boost on dark portrait areas */
+      letter-spacing: 0.03em;
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 1.2s cubic-bezier(0.19, 1, 0.22, 1), transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .hero-right-text.visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
     }
 
     @media (max-width: 768px) {
       .hero-right-text {
-        left: 5%;
-        max-width: 90%;
-        bottom: 40px;
-        font-size: 0.95rem;
+        bottom: 10%;
+        max-width: 88%;
+        font-size: 0.72rem;
+        line-height: 1.6;
       }
     }
 
