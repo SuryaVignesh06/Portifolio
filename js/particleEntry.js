@@ -47,17 +47,17 @@ class ParticleSystem3D {
     this._loadPhotoAndBuild();
 
     // Cinematic "Hello" intro or SKIP if coming from backlink
-    const isNavigation = performance.getEntriesByType("navigation").length > 0 
-                          ? performance.getEntriesByType("navigation")[0].type === "navigate" 
-                          : false;
-    const hasHash = !!window.location.hash;
+    const navEntries = performance.getEntriesByType("navigation");
+    const navType = navEntries.length > 0 ? navEntries[0].type : "navigate";
+    // "back_forward" = browser Back/Forward button; "navigate" = link click
     const isFromInternal = document.referrer.includes('certifications.html') || 
                            document.referrer.includes('projects.html') || 
                            document.referrer.includes('home.html');
+    const hasHash = !!window.location.hash;
+    const isBackNavigation = navType === "back_forward";
 
-    // ONLY SHOW INTRO if it is a fresh visit or manual refresh. 
-    // SKIP if returning from a subpage or hash routing
-    if ((isNavigation && isFromInternal) || hasHash) {
+    // SKIP INTRO if: coming back via browser Back button OR link from internal subpage OR hash routing
+    if (isBackNavigation || (navType === "navigate" && isFromInternal) || hasHash) {
       const page = document.getElementById('portfolioPage');
       const pEntry = document.getElementById('particle-entry');
       const cinema = document.getElementById('cinematic-overlay');
@@ -68,7 +68,23 @@ class ParticleSystem3D {
       if (page) {
         page.style.opacity = '1';
         page.style.pointerEvents = 'auto';
+        page.classList.add('visible');
       }
+
+      // Immediately reveal hero image and all hero text elements
+      const heroImgWrap = document.querySelector('.hero-image');
+      if (heroImgWrap) heroImgWrap.style.opacity = '1';
+
+      const heroEls = document.querySelectorAll(
+        '.hero-massive-overlay, .hero-tagline-small, .hero-right-text, .hero-name, .hero-tagline, .hero-bottom-left, .hero-bottom-right'
+      );
+      heroEls.forEach(el => el.classList.add('hero-animated'));
+
+      // Reveal the navbar immediately
+      setTimeout(() => {
+        const nav = document.querySelector('.bottom-nav');
+        if (nav) nav.classList.add('visible');
+      }, 100);
 
       if (this.renderer) {
         this.renderer.dispose();

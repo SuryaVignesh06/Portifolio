@@ -5398,9 +5398,16 @@
     // Global function to trigger hero animations
     function startWorksTransition(e) {
       if(e) e.preventDefault();
-      // Redirect directly to external projects page
-      window.location.href = 'projects.html';
+      // Use cinematic page transition overlay (intercepted by pageTransition.js)
+      const link = document.createElement('a');
+      link.href = 'projects.html';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   </script>
+
+  <!-- Cinematic Page Transition Overlay -->
+  <script src="js/pageTransition.js"></script>
 </body>
-</html>
+</html>
