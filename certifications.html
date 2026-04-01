@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certifications | Surya Vignesh</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Inter', sans-serif;
+      color: #111;
+      overflow-x: hidden;
+    }
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    .font-poppins { font-family: 'Poppins', sans-serif; }
+    
+    .cert-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .cert-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #eb7a14;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .cert-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border-color: rgba(235, 122, 20, 0.2);
+    }
+    .cert-card:hover::before {
+      transform: scaleX(1);
+    }
+    .view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: #111;
+      color: white;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 1.5rem;
+    }
+    .view-btn:hover {
+      background: #eb7a14;
+      transform: scale(1.05);
+    }
+    .grid-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .header-bg {
+      background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-black/5 py-4">
+    <div class="grid-container flex justify-between items-center">
+      <a href="index.html#certifications" class="font-bebas text-2xl tracking-widest text-black hover:text-[#eb7a14] transition-colors">
+        ← BACK TO PORTFOLIO
+      </a>
+      <div class="hidden md:block">
+        <span class="font-bebas text-sm tracking-[0.3em] text-black/40 uppercase">Surya Vignesh / Certifications</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header Section -->
+  <header class="pt-32 pb-16 header-bg">
+    <div class="grid-container text-center">
+      <p class="font-poppins text-[#eb7a14] font-bold tracking-[0.4em] uppercase text-xs mb-4">Credentials & Achievements</p>
+      <h1 class="font-bebas text-7xl md:text-9xl text-black leading-none mb-6 tracking-tight">
+        Professional <span class="text-[#eb7a14]">Credentials</span>
+      </h1>
+      <div class="w-24 h-1 bg-[#eb7a14] mx-auto opacity-50"></div>
+    </div>
+  </header>
+
+  <!-- Gallery Grid -->
+  <main class="pb-32">
+    <div class="grid-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Skill 1: Python -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Python</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">NSDC Verified</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">Python Programming</h3>
+            <p class="text-sm text-black/50 font-medium">National Skill Development Corporation</p>
+          </div>
+          <a href="https://drive.google.com/file/d/1fBc0RB6-Xq0LlnetRON1ujiG3yC0a9Wu/view?usp=sharing" target="_blank" class="view-btn group">
+            View Certificate <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 2: CSS -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Web Dev</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Professional</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">CSS Web Development</h3>
+            <p class="text-sm text-black/50 font-medium">Professional Certificate</p>
+          </div>
+          <a href="css certificate.pdf" target="_blank" class="view-btn group">
+            View Certificate <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 3: AI Brainstorming -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Artificial Intel</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Professional</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">AI for Brainstorming</h3>
+            <p class="text-sm text-black/50 font-medium">Professional Certificate</p>
+          </div>
+          <a href="Ai for brainstroming.pdf" target="_blank" class="view-btn group">
+            View Certificate <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 4: AI Data Analysis -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Data Science</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Professional</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">AI for Data Analysis</h3>
+            <p class="text-sm text-black/50 font-medium">Professional Certificate</p>
+          </div>
+          <a href="Ai for data analysis.pdf" target="_blank" class="view-btn group">
+            View Certificate <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 5: AI Research -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Research</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Professional</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">AI for Research & Insight</h3>
+            <p class="text-sm text-black/50 font-medium">Professional Certificate</p>
+          </div>
+          <a href="Ai for research and insight.pdf" target="_blank" class="view-btn group">
+            View Certificate <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 6: Java -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Programming</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Verified</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">Java Programming</h3>
+            <p class="text-sm text-black/50 font-medium">Advanced Certification</p>
+          </div>
+          <a href="#" class="view-btn group opacity-50 cursor-not-allowed">
+            will be Uploaded Soon <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 7: Full Stack -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Full Stack</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Verified</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">Full Stack Development</h3>
+            <p class="text-sm text-black/50 font-medium">Comprehensive Development</p>
+          </div>
+          <a href="#" class="view-btn group opacity-50 cursor-not-allowed">
+            will be Uploaded Soon <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 8: Gen AI -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Gen AI</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Pending</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">Generative AI</h3>
+            <p class="text-sm text-black/50 font-medium">Prompt Engineering & LLMs</p>
+          </div>
+          <a href="#" class="view-btn group opacity-50 cursor-not-allowed">
+            will be Uploaded Soon <span>→</span>
+          </a>
+        </div>
+
+        <!-- Skill 9: Agentic AI -->
+        <div class="cert-card">
+          <div>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bebas text-xs tracking-widest text-[#eb7a14] border border-[#eb7a14]/30 px-3 py-1 rounded-full">Agents</span>
+              <span class="text-[0.65rem] font-bold text-black/20 uppercase tracking-widest">Pending</span>
+            </div>
+            <h3 class="font-bebas text-4xl text-black leading-tight mb-2">Agentic AI</h3>
+            <p class="text-sm text-black/50 font-medium">LLM Task Frameworks</p>
+          </div>
+          <a href="#" class="view-btn group opacity-50 cursor-not-allowed">
+            will be Uploaded Soon <span>→</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-12 bg-white border-t border-black/5">
+    <div class="grid-container text-center">
+      <p class="font-bebas text-lg tracking-widest text-black/40">© 2026 Surya Vignesh • All Rights Reserved</p>
+    </div>
+  </footer>
+
+</body>
+</html>

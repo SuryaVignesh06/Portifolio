@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Work Samples | Surya Vignesh</title>
+  <meta name="description" content="Portfolio Work Samples of Surya Vignesh — AI/ML projects, UI/UX designs, and full-stack web applications." />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #f2f2f2;
+      color: #000;
+      overflow-x: hidden;
+    }
+
+    /* ========== PAGE HEADER ========== */
+    .page-header {
+      padding: 7rem 5% 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .page-header .label-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .page-header .label-row .tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.35em;
+      color: #eb7a14;
+      text-transform: uppercase;
+    }
+
+    .page-header .label-row .line {
+      flex: 1;
+      height: 1px;
+      background: rgba(0,0,0,0.12);
+    }
+
+    .page-header .label-row .count {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.35em;
+      color: rgba(0,0,0,0.35);
+    }
+
+    .page-header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      letter-spacing: 0.03em;
+      line-height: 1;
+      color: #000;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 .accent { color: #eb7a14; }
+
+    .page-header .subtitle {
+      font-size: 1rem;
+      color: rgba(0,0,0,0.5);
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    /* ========== FILTER PILLS ========== */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0 5%;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .filter-pill {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 0.55rem 1.3rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(0,0,0,0.14);
+      background: transparent;
+      color: rgba(0,0,0,0.55);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: rgba(0,0,0,0.35);
+      color: #000;
+    }
+
+    .filter-pill.active {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    /* ========== PROJECTS GRID ========== */
+    .projects-grid-v2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 5% 10rem;
+    }
+
+    /* ========== PROJECT CARD — UPGRADED ========== */
+    .project-card-v2 {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-decoration: none;
+      transition: all 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: #1a1a1a;
+    }
+
+    .project-card-v2.hidden { display: none; }
+
+    .project-card-v2:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    }
+
+    /* Background image — crisp & clear */
+    .project-card-v2__bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.82);
+      transform: scale(1.0);
+      transition: transform 0.55s ease, filter 0.55s ease;
+    }
+
+    .project-card-v2:hover .project-card-v2__bg {
+      transform: scale(1.04);
+      filter: brightness(0.65);
+    }
+
+    /* Gradient for gradient-bg cards */
+    .project-card-v2__gradient {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    /* Top-only dark shadow for label readability */
+    .project-card-v2__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 35%, transparent 55%, rgba(0,0,0,0.1) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Top content — only holds project number label, floats to top */
+    .project-card-v2__content {
+      position: relative;
+      z-index: 2;
+      padding: 1.4rem 1.75rem 0;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* Skeuomorphic Solid Metal bottom panel */
+    .project-card-v2__glass {
+      position: relative;
+      z-index: 3;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: linear-gradient(180deg, #2a2a2a 0%, #111 100%);
+      border-top: 1px solid #4f4f4f;
+      padding: 1.1rem 1.75rem 1.5rem;
+      box-shadow: 0 -5px 15px rgba(0,0,0,0.8), inset 0 2px 2px rgba(255,255,255,0.15);
+    }
+
+    .project-card-v2__number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+    }
+
+    /* Category Badge */
+    .project-card-v2__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 1rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      align-self: flex-start;
+    }
+
+    .badge--ai { background: rgba(235,122,20,0.22); color: #ff9a45; border: 1px solid rgba(235,122,20,0.3); }
+    .badge--uiux { background: rgba(100,150,255,0.18); color: #88b0ff; border: 1px solid rgba(100,150,255,0.25); }
+    .badge--web { background: rgba(80,220,130,0.18); color: #6adda0; border: 1px solid rgba(80,220,130,0.25); }
+
+    .project-card-v2__title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-top: 0.4rem;
+      line-height: 1.05;
+    }
+
+    .project-card-v2__desc {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.6;
+      margin-top: 0.6rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Action Bar */
+    .project-card-v2__actions {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      gap: 0.6rem;
+      padding: 1rem 1.75rem 1.5rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    }
+
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      transition: all 0.28s ease;
+      white-space: nowrap;
+      backdrop-filter: blur(6px);
+    }
+
+    .card-btn--github {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .card-btn--github:hover {
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .card-btn--live {
+      background: #eb7a14;
+      color: #fff;
+      border: 1px solid transparent;
+    }
+
+    .card-btn--live:hover {
+      background: #ff8e2a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(235,122,20,0.4);
+    }
+
+    .card-btn svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ========== BOTTOM PILL NAV (Skeuomorphic) ========== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%);
+      border: 1px solid #111;
+      border-top: 1px solid #4f4f4f;
+      border-radius: 999px;
+      padding: 8px 16px;
+      box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.7), 
+        inset 0 2px 2px rgba(255, 255, 255, 0.15),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+      z-index: 9999;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .nav-pill {
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.7);
+      text-shadow: 0 -1px 1px rgba(0,0,0,0.8);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .nav-pill:hover { 
+      background: linear-gradient(180deg, #2a2a2a 0%, #111 100%); 
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+      color: #fff; 
+    }
+    .nav-pill.active { 
+      background: linear-gradient(180deg, #111 0%, #2a2a2a 100%); 
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.8), 0 1px 1px rgba(255,255,255,0.1);
+      color: #eb7a14; 
+    }
+    .nav-pill.cta { 
+      background: linear-gradient(180deg, #ff9233 0%, #eb7a14 100%); 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.5);
+      border: 1px solid #c9650b;
+      color: #fff; 
+      text-shadow: 0 -1px 1px rgba(0,0,0,0.2);
+    }
+    .nav-pill.cta:hover { 
+      background: linear-gradient(180deg, #e37411 0%, #cc670c 100%); 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    /* ========== FOOTER ========== */
+    .page-footer {
+      padding: 2rem 5%;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(0,0,0,0.4);
+      background: rgba(255,255,255,0.5);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .projects-grid-v2 {
+        grid-template-columns: 1fr;
+        padding: 0 5% 6rem;
+      }
+
+      .page-header { padding: 5.5rem 5% 2rem; }
+      .bottom-nav { bottom: 16px; padding: 6px 10px; gap: 2px; }
+      .nav-pill { padding: 6px 12px; font-size: 0.8rem; }
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .project-card-v2 {
+      animation: fadeInUp 0.65s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+    }
+
+    .project-card-v2:nth-child(1)  { animation-delay: 0.04s; }
+    .project-card-v2:nth-child(2)  { animation-delay: 0.09s; }
+    .project-card-v2:nth-child(3)  { animation-delay: 0.14s; }
+    .project-card-v2:nth-child(4)  { animation-delay: 0.19s; }
+    .project-card-v2:nth-child(5)  { animation-delay: 0.24s; }
+    .project-card-v2:nth-child(6)  { animation-delay: 0.29s; }
+    .project-card-v2:nth-child(7)  { animation-delay: 0.34s; }
+    .project-card-v2:nth-child(8)  { animation-delay: 0.39s; }
+    .project-card-v2:nth-child(9)  { animation-delay: 0.44s; }
+    .project-card-v2:nth-child(10) { animation-delay: 0.49s; }
+
+    /* Page entry fade */
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    body { animation: pageFadeIn 0.5s ease-out both; }
+
+    /* =========================================
+       GLOBAL SKEUOMORPHIC UI CLASSES
+       ========================================= */
+    .skeuo-card-dark {
+      background: linear-gradient(145deg, #2b2b2b, #1a1a1a) !important;
+      border-radius: 20px !important;
+      box-shadow: 
+        10px 10px 20px rgba(0,0,0,0.8),
+        -5px -5px 15px rgba(255,255,255,0.04), 
+        inset 1px 1px 2px rgba(255,255,255,0.1) !important;
+      border: 1px solid #333 !important;
+      backdrop-filter: none !important;
+    }
+
+    .skeuo-card-light {
+      background: linear-gradient(145deg, #ffffff, #d9d9d9) !important;
+      border-radius: 20px !important;
+      box-shadow: 
+        15px 15px 30px #cecece,
+        -15px -15px 30px #ffffff,
+        inset 1px 1px 3px rgba(255,255,255,1) !important;
+      border: 1px solid #e1e1e1 !important;
+    }
+
+    .skeuo-btn-orange {
+      background: linear-gradient(145deg, #ff8a17, #da6908) !important;
+      border: 1px solid #bd5905 !important;
+      box-shadow: 
+        5px 5px 10px rgba(0,0,0,0.3),
+        -2px -2px 5px rgba(255,255,255,0.2),
+        inset 1px 1px 2px rgba(255,255,255,0.5) !important;
+      color: #fff !important;
+      text-shadow: 0 -1px 1px rgba(0,0,0,0.4) !important;
+      transition: all 0.2s ease-in-out !important;
+    }
+
+    .skeuo-btn-orange:active {
+      background: linear-gradient(145deg, #da6908, #ff8a17) !important;
+      box-shadow: 
+        inset 4px 4px 8px #a85004, 
+        inset -2px -2px 4px #ffa442 !important;
+      transform: translateY(3px) !important;
+    }
+
+    .skeuo-btn-dark {
+      background: linear-gradient(145deg, #3a3a3a, #1a1a1a) !important;
+      border: 1px solid #111 !important;
+      box-shadow: 
+        5px 5px 10px rgba(0,0,0,0.5),
+        -2px -2px 5px rgba(255,255,255,0.05),
+        inset 1px 1px 2px rgba(255,255,255,0.1) !important;
+      color: #fff !important;
+      text-decoration: none !important;
+      transition: all 0.2s ease-in-out !important;
+    }
+
+    .skeuo-btn-dark:active {
+      box-shadow: inset 4px 4px 8px #080808, inset -2px -2px 4px #3d3d3d !important;
+      transform: translateY(3px) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="label-row">
+      <span class="tag">Selected Work</span>
+      <div class="line"></div>
+      <span class="count">10 Projects</span>
+    </div>
+    <h1>Portfolio <span class="accent">Work Samples</span></h1>
+    <p class="subtitle">A hand-curated showcase spanning AI engineering, UI/UX craft, and production-ready web development.</p>
+  </header>
+
+  <!-- Filter Pills -->
+  <div class="filter-bar">
+    <button class="filter-pill active" data-filter="all">All Work</button>
+    <button class="filter-pill" data-filter="ai">AI Development</button>
+    <button class="filter-pill" data-filter="uiux">UI / UX Design</button>
+    <button class="filter-pill" data-filter="web">Web Development</button>
+  </div>
+
+  <!-- Projects Grid -->
+  <main class="projects-grid-v2">
+
+    <!-- PROJECT 01: CrackAI -->
+    <div class="project-card-v2" data-category="ai">
+      <img class="project-card-v2__bg" src="images/crackai_dashboard_1774933216751.png" alt="CrackAI" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 01</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--ai">AI Development</span>
+        <h3 class="project-card-v2__title">CRACKAI</h3>
+        <p class="project-card-v2__desc">An AI-powered adaptive learning engine built on Gemini 2.5 Flash. Generates personalised quizzes from student chat history using NLP, enforces subject guardrails, and delivers real-time progress analytics — making exam prep smarter, not harder.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://www.linkedin.com/posts/chikkala-venkata-surya-vignesh-82690631b_python-flask-generativeai-activity-7415690027587776512-rXt_" target="_blank" class="card-btn card-btn--live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View Project</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 02: Lawbby AI -->
+    <div class="project-card-v2" data-category="ai">
+      <img class="project-card-v2__bg" src="images/lawbby_interface_1774933231818.png" alt="Lawbby AI" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 02</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--ai">AI Development</span>
+        <h3 class="project-card-v2__title">LAWBBY AI</h3>
+        <p class="project-card-v2__desc">An AI-powered legal intelligence tool engineered for law students. Leverages generative AI and semantic search to dissect case documents, extract key precedents, and generate structured case briefs — transforming hours of legal research into seconds of insight.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://github.com/SuryaVignesh06/Lawbby-AI-Case-Analyser" target="_blank" class="card-btn card-btn--github"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 03: Resume of Thrones -->
+    <div class="project-card-v2" data-category="ai">
+      <img class="project-card-v2__bg" src="images/resume_ats_1774933249231.png" alt="Resume of Thrones" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 03</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--ai">AI Development</span>
+        <h3 class="project-card-v2__title">RESUME OF THRONES</h3>
+        <p class="project-card-v2__desc">An intelligent ATS powered by TF-IDF vectorization and cosine similarity for precise resume-to-job-fit scoring. Features ML-driven classification and NLP keyword extraction to automate candidate screening at scale.</p>
+        <div class="project-card-v2__actions">
+          <a href="#" class="card-btn card-btn--live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View Project</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 04: Bindass -->
+    <div class="project-card-v2" data-category="uiux">
+      <img class="project-card-v2__bg" src="images/bindass_music_1774933268930.png" alt="Bindass Music App" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 04</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--uiux">UI / UX Design</span>
+        <h3 class="project-card-v2__title">BINDASS</h3>
+        <p class="project-card-v2__desc">A music streaming app UI built for maximum engagement and minimum friction. Scalable design system, mood-aware colour palettes, immersive album visuals, and micro-interactions that turn every tap into a moment of tactile delight.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://www.linkedin.com/posts/chikkala-venkata-surya-vignesh-82690631b_uiuxdesign-productdesign-musicapp-activity-7402325095362232320-05jF" target="_blank" class="card-btn card-btn--live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View on LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 05: Sanskriti -->
+    <div class="project-card-v2" data-category="web">
+      <img class="project-card-v2__bg" src="images/sanskriti_web_1774933286399.png" alt="Sanskriti" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 05</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--web">Web Development</span>
+        <h3 class="project-card-v2__title">SANSKRITI</h3>
+        <p class="project-card-v2__desc">A cultural web platform celebrating India's artistic heritage through music, dance, and documentary storytelling. Clean grid layouts, scalable UI patterns, and accessibility-first code — bridging generations of culture with the digital age.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://my-site-kd37rpqd-venkatasuryavignes.wix-vibe.com" target="_blank" class="card-btn card-btn--live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Live Site</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 06: LiftUp -->
+    <div class="project-card-v2" data-category="web">
+      <img class="project-card-v2__bg" src="images/liftup_fitness_1774933310640.png" alt="LiftUp" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 06</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--web">Web Development</span>
+        <h3 class="project-card-v2__title">LIFTUP</h3>
+        <p class="project-card-v2__desc">A clean, high-energy fitness and wellness platform UI built for motivation and clarity. Bold typography, fluid transitions, and a mobile-first approach — delivering a premium workout-tracking experience as powerful as the workouts it supports.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://github.com/SuryaVignesh06/Liftup" target="_blank" class="card-btn card-btn--github"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub</a>
+          <a href="https://suryavignesh06.github.io/Liftup/" target="_blank" class="card-btn card-btn--live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Live Site</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 07: BrandiGO -->
+    <div class="project-card-v2" data-category="uiux">
+      <img class="project-card-v2__bg" src="images/brandigo_agency_1774933326259.png" alt="BrandiGO" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 07</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--uiux">UI / UX &amp; Frontend</span>
+        <h3 class="project-card-v2__title">BRANDIGO</h3>
+        <p class="project-card-v2__desc">A bold, conversion-optimised website UI for a modern branding agency. Striking visual hierarchy, intuitive information architecture, immersive typography, and a design language that commands attention from the very first scroll.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://github.com/SuryaVignesh06/Brand-BrandiGO" target="_blank" class="card-btn card-btn--github"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 08: College Portal -->
+    <div class="project-card-v2" data-category="web">
+      <img class="project-card-v2__bg" src="images/college_portal_1774933345843.png" alt="College Portal" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 08</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--web">Web Development</span>
+        <h3 class="project-card-v2__title">COLLEGE PORTAL</h3>
+        <p class="project-card-v2__desc">A comprehensive academic portal delivering a seamless university experience. From course management to campus announcements, the College Portal unifies every touchpoint of student life under one clean interface — maximum performance, maximum accessibility.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://github.com/SuryaVignesh06/College" target="_blank" class="card-btn card-btn--github"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub</a>
+          <a href="https://suryavignesh06.github.io/College/" target="_blank" class="card-btn card-btn--live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Live Site</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 09: FOODUI -->
+    <div class="project-card-v2" data-category="web">
+      <img class="project-card-v2__bg" src="images/foodui_restaurant_1774933364355.png" alt="FOODUI" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 09</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--web">Web Development</span>
+        <h3 class="project-card-v2__title">FOODUI</h3>
+        <p class="project-card-v2__desc">A mouth-watering digital presence for modern restaurants. FOODUI blends rich visual storytelling, smooth scroll interactions, and an elegant menu layout — turning casual browsers into eager guests before they even walk through the door.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://github.com/SuryaVignesh06/FOODUI" target="_blank" class="card-btn card-btn--github"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub</a>
+          <a href="https://suryavignesh06.github.io/FOODUI/" target="_blank" class="card-btn card-btn--live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Live Site</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 10: College Node.js -->
+    <div class="project-card-v2" data-category="web">
+      <img class="project-card-v2__bg" src="images/college_node_1774933379161.png" alt="College Node.js" />
+      <div class="project-card-v2__overlay"></div>
+      <div class="project-card-v2__content"><span class="project-card-v2__number">PROJECT. 10</span></div>
+      <div class="project-card-v2__glass">
+        <span class="project-card-v2__badge badge--web">Web Development</span>
+        <h3 class="project-card-v2__title">COLLEGE NODE.JS</h3>
+        <p class="project-card-v2__desc">A full-stack academic management system built with Node.js and a clean frontend stack. Handles course registration, student data, and administrative workflows with a smooth, professional interface designed for real institutional use.</p>
+        <div class="project-card-v2__actions">
+          <a href="https://github.com/SuryaVignesh06/collage-node.js" target="_blank" class="card-btn card-btn--github"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p>© 2026 Surya Vignesh. All rights reserved.</p>
+  </footer>
+
+  <!-- Bottom Pill Navigation -->
+  <nav class="bottom-nav">
+    <a href="index.html#projects" class="nav-pill">Home</a>
+    <a href="#" class="nav-pill active">Portfolio</a>
+    <a href="mailto:suryavignesh.chikkala@gmail.com" class="nav-pill cta">Contact Me</a>
+  </nav>
+
+  <!-- Filter Logic -->
+  <script>
+    const filterButtons = document.querySelectorAll('.filter-pill');
+    const projectCards  = document.querySelectorAll('.project-card-v2');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+
+        projectCards.forEach(card => {
+          if (filter === 'all' || card.dataset.category === filter) {
+            card.classList.remove('hidden');
+            card.style.animation = 'none';
+            card.offsetHeight;
+            card.style.animation = '';
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

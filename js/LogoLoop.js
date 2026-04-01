@@ -1,3 +1,8 @@
+/**
+ * Premium Logo Marquee Component (Vanilla JS Version)
+ * Smooth kinetic scrolling with Lerped velocity and ResizeObserver support.
+ * Logic adapted from the premium React component.
+ */
 class LogoLoop {
   constructor(container, options = {}) {
     this.container = typeof container === 'string' ? document.querySelector(container) : container;
@@ -6,22 +11,34 @@ class LogoLoop {
     this.options = {
       logos: [],
       speed: 120,
-      direction: 'left',
+      direction: 'left', // 'left', 'right', 'up', 'down'
       logoHeight: 28,
       gap: 32,
-      pauseOnHover: false,
+      pauseOnHover: true,
       hoverSpeed: undefined,
-      fadeIn: true, // Renamed from fadeOut to be clearer, or just use fadeOut as per prop
       fadeOut: false,
       fadeOutColor: null,
       scaleOnHover: false,
+      renderItem: null,
+      ariaLabel: 'Partner logos',
       ...options
+    };
+
+    /**
+     * Animation Configuration
+     * SMOOTH_TAU: Factor for velocity easing (higher = more inertia)
+     * COPY_HEADROOM: Extra copies to prevent gaps on high-res displays
+     */
+    this.config = {
+      SMOOTH_TAU: 0.25,
+      MIN_COPIES: 2,
+      COPY_HEADROOM: 2
     };
 
     this.state = {
       seqWidth: 0,
       seqHeight: 0,
-      copyCount: 2,
+      copyCount: this.config.MIN_COPIES,
       isHovered: false,
       offset: 0,
       velocity: 0,
@@ -29,6 +46,7 @@ class LogoLoop {
       rafId: null
     };
 
+    this.lists = [];
     this.init();
   }
 
@@ -36,9 +54,11 @@ class LogoLoop {
     this.setupDOM();
     this.setupStyles();
     this.setupEvents();
+    
+    // Initial measurement
     this.updateDimensions();
     
-    // Resize Observer
+    // Resize Observer for robust responsiveness
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(() => this.updateDimensions());
       this.resizeObserver.observe(this.container);
@@ -47,30 +67,41 @@ class LogoLoop {
       window.addEventListener('resize', () => this.updateDimensions());
     }
 
-    // Image Loader
+    // Image Loader: refresh dimensions once logos are actually loaded
     this.waitForImages();
 
-    // Start Loop
-    this.animate(performance.now());
+    // === Visibility gate: pause rAF when fully off-screen ===
+    this.state.isVisible = true;
+    if (window.IntersectionObserver) {
+      const visObs = new IntersectionObserver(
+        (entries) => {
+          this.state.isVisible = entries[0].isIntersecting;
+          // Re-kick the loop if we just became visible and it stalled
+          if (this.state.isVisible && !this.state.rafId) {
+            this.state.lastTimestamp = null;
+            this.state.rafId = requestAnimationFrame((ts) => this.animate(ts));
+          }
+        },
+        { rootMargin: '100px' } // small headroom so it warms up just before entering view
+      );
+      visObs.observe(this.container);
+    }
+
+    // Start high-performance animation loop
+    this.state.rafId = requestAnimationFrame((ts) => this.animate(ts));
   }
 
   setupDOM() {
     this.container.innerHTML = '';
     this.container.classList.add('logoloop');
     
-    if (this.options.direction === 'up' || this.options.direction === 'down') {
-      this.container.classList.add('logoloop--vertical');
-    } else {
-      this.container.classList.add('logoloop--horizontal');
-    }
+    const isVertical = this.isVertical();
+    this.container.classList.add(isVertical ? 'logoloop--vertical' : 'logoloop--horizontal');
 
-    if (this.options.fadeOut) {
-      this.container.classList.add('logoloop--fade');
-    }
-    
-    if (this.options.scaleOnHover) {
-      this.container.classList.add('logoloop--scale-hover');
-    }
+    if (this.options.fadeOut) this.container.classList.add('logoloop--fade');
+    if (this.options.scaleOnHover) this.container.classList.add('logoloop--scale-hover');
+    this.container.setAttribute('role', 'region');
+    this.container.setAttribute('aria-label', this.options.ariaLabel);
 
     this.track = document.createElement('div');
     this.track.className = 'logoloop__track';
@@ -85,31 +116,42 @@ class LogoLoop {
     if (this.options.fadeOutColor) {
       this.container.style.setProperty('--logoloop-fadeColor', this.options.fadeOutColor);
     }
+    // Limit repaint scope: browser knows nothing outside overflows
+    this.container.style.contain = 'layout style';
   }
 
   renderLogoItem(item) {
+    if (this.options.renderItem) {
+      const li = document.createElement('li');
+      li.className = 'logoloop__item';
+      li.appendChild(this.options.renderItem(item));
+      return li;
+    }
+
     const li = document.createElement('li');
     li.className = 'logoloop__item';
-    li.style.marginRight = this.isVertical() ? '0' : `${this.options.gap}px`; // Backup if gap flex not supported well, but CSS uses gap
-    // Actually, let's rely on CSS gap.
+    li.setAttribute('role', 'listitem');
 
     let content;
     if (item.node) {
       const span = document.createElement('span');
       span.className = 'logoloop__node';
-      // If item.node is a string (SVG), inject it
+      // If node is an SVG string or element
       if (typeof item.node === 'string') {
         span.innerHTML = item.node;
+      } else if (item.node instanceof HTMLElement || item.node instanceof SVGElement) {
+        span.appendChild(item.node);
       } else {
-        span.textContent = item.title;
+        span.textContent = item.title || '';
       }
       content = span;
-    } else if (item.src) {
+    } else {
       const img = document.createElement('img');
       img.src = item.src;
       img.alt = item.alt || '';
       img.title = item.title || '';
       img.loading = 'lazy';
+      img.decoding = 'async';
       img.draggable = false;
       content = img;
     }
@@ -130,29 +172,27 @@ class LogoLoop {
   }
 
   renderLists() {
-    // We will render initial copy, measure, then add more copies
     this.track.innerHTML = '';
     this.lists = [];
     
-    // Initial list for measurement
+    // Primary list for measurement
     const list = document.createElement('ul');
     list.className = 'logoloop__list';
+    list.setAttribute('role', 'list');
     this.options.logos.forEach(logo => {
       list.appendChild(this.renderLogoItem(logo));
     });
     
     this.track.appendChild(list);
-    this.seqElement = list; // Reference to the first sequence
+    this.seqElement = list;
     this.lists.push(list);
-    
-    // We'll add more copies in updateDimensions
   }
 
   setupEvents() {
-    this.container.addEventListener('mouseenter', () => {
+    this.track.addEventListener('mouseenter', () => {
       this.state.isHovered = true;
     });
-    this.container.addEventListener('mouseleave', () => {
+    this.track.addEventListener('mouseleave', () => {
       this.state.isHovered = false;
     });
   }
@@ -161,21 +201,17 @@ class LogoLoop {
     return this.options.direction === 'up' || this.options.direction === 'down';
   }
 
-  getEffectiveHoverSpeed() {
-    if (this.options.hoverSpeed !== undefined) return this.options.hoverSpeed;
-    if (this.options.pauseOnHover === true) return 0;
-    if (this.options.pauseOnHover === false) return undefined;
-    return 0;
-  }
-
   getTargetVelocity() {
     const magnitude = Math.abs(this.options.speed);
+    const isVertical = this.isVertical();
     let directionMultiplier;
-    if (this.isVertical()) {
+    
+    if (isVertical) {
       directionMultiplier = this.options.direction === 'up' ? 1 : -1;
     } else {
       directionMultiplier = this.options.direction === 'left' ? 1 : -1;
     }
+    
     const speedMultiplier = this.options.speed < 0 ? -1 : 1;
     return magnitude * directionMultiplier * speedMultiplier;
   }
@@ -184,39 +220,30 @@ class LogoLoop {
     const containerWidth = this.container.clientWidth;
     const containerHeight = this.container.clientHeight;
     
-    // Measure sequence
-    // Use getBoundingClientRect for precise sub-pixel measurements
     const seqRect = this.seqElement.getBoundingClientRect();
     const sequenceWidth = seqRect.width;
     const sequenceHeight = seqRect.height;
     
-    // If empty or hidden, retry later or abort
     if (sequenceWidth === 0 && sequenceHeight === 0) return;
 
-    const MIN_COPIES = 2; // Always at least 2 for smooth looping (one exiting, one entering)
-    const COPY_HEADROOM = 2; // Extra copies buffer
-
-    let newCopyCount = MIN_COPIES;
+    let newCopyCount = this.config.MIN_COPIES;
 
     if (this.isVertical()) {
-      this.state.seqHeight = Math.ceil(sequenceHeight);
-      
-      // If container has no height set properly yet, might need adjustment
-      const parentHeight = this.container.parentElement ? this.container.parentElement.clientHeight : 0;
-      // In React version it sets container height if vertical. 
-      // Here we assume CSS handles it or we adapt.
-      
-      const viewport = containerHeight > 0 ? containerHeight : parentHeight;
+      // Sub-pixel precision: raw float, no rounding
+      // Add gap so the measured boundary includes the space AFTER the last item
+      this.state.seqHeight = sequenceHeight + this.options.gap;
+      const viewport = containerHeight > 0 ? containerHeight : (this.container.parentElement?.clientHeight || 0);
       if (sequenceHeight > 0) {
-         const copiesNeeded = Math.ceil(viewport / sequenceHeight) + COPY_HEADROOM;
-         newCopyCount = Math.max(MIN_COPIES, copiesNeeded);
+        const copiesNeeded = Math.ceil(viewport / sequenceHeight) + this.config.COPY_HEADROOM;
+        newCopyCount = Math.max(this.config.MIN_COPIES, copiesNeeded);
       }
-      
     } else {
-      this.state.seqWidth = Math.ceil(sequenceWidth);
+      // Sub-pixel precision: raw float, no rounding
+      // Add gap so the loop point is flush with the gap between the last and first icon
+      this.state.seqWidth = sequenceWidth + this.options.gap;
       if (sequenceWidth > 0) {
-        const copiesNeeded = Math.ceil(containerWidth / sequenceWidth) + COPY_HEADROOM;
-        newCopyCount = Math.max(MIN_COPIES, copiesNeeded);
+        const copiesNeeded = Math.ceil(containerWidth / sequenceWidth) + this.config.COPY_HEADROOM;
+        newCopyCount = Math.max(this.config.MIN_COPIES, copiesNeeded);
       }
     }
 
@@ -227,16 +254,12 @@ class LogoLoop {
 
   updateCopyCount(count) {
     this.state.copyCount = count;
-    
-    // Add or remove lists
     while (this.lists.length < count) {
       const clone = this.seqElement.cloneNode(true);
-      // Make sure cloned lists are aria-hidden
       clone.setAttribute('aria-hidden', 'true');
       this.track.appendChild(clone);
       this.lists.push(clone);
     }
-    
     while (this.lists.length > count) {
       const list = this.lists.pop();
       list.remove();
@@ -256,36 +279,44 @@ class LogoLoop {
     images.forEach(img => {
       if (img.complete) onLoad();
       else {
-        img.addEventListener('load', onLoad);
-        img.addEventListener('error', onLoad);
+        img.addEventListener('load', onLoad, { once: true });
+        img.addEventListener('error', onLoad, { once: true });
       }
     });
   }
 
   animate(timestamp) {
+    // === Visibility gate: drop frames when off-screen ===
+    if (!this.state.isVisible) {
+      this.state.rafId = null; // Let it go idle
+      return;
+    }
+
     if (this.state.lastTimestamp === null) {
       this.state.lastTimestamp = timestamp;
     }
 
-    const deltaTime = Math.max(0, timestamp - this.state.lastTimestamp) / 1000;
+    // Cap deltaTime to 100ms to prevent huge jumps after tab switches
+    const deltaTime = Math.min(Math.max(0, timestamp - this.state.lastTimestamp) / 1000, 0.1);
     this.state.lastTimestamp = timestamp;
 
-    const SMOOTH_TAU = 0.25;
-    const hoverSpeed = this.getEffectiveHoverSpeed(); // Correctly get hover speed
-    const target = (this.state.isHovered && hoverSpeed !== undefined) 
-      ? hoverSpeed 
+    const effectiveHoverSpeed = this.options.hoverSpeed !== undefined 
+      ? this.options.hoverSpeed 
+      : (this.options.pauseOnHover ? 0 : undefined);
+
+    const target = (this.state.isHovered && effectiveHoverSpeed !== undefined) 
+      ? effectiveHoverSpeed 
       : this.getTargetVelocity();
 
-    // Lerp velocity
-    const easingFactor = 1 - Math.exp(-deltaTime / SMOOTH_TAU);
+    // Lerp velocity smoothing — exponential decay for frame-rate independence
+    const easingFactor = 1 - Math.exp(-deltaTime / this.config.SMOOTH_TAU);
     this.state.velocity += (target - this.state.velocity) * easingFactor;
 
     const seqSize = this.isVertical() ? this.state.seqHeight : this.state.seqWidth;
 
     if (seqSize > 0) {
       let nextOffset = this.state.offset + this.state.velocity * deltaTime;
-      
-      // Normalized modulo
+      // Sub-pixel modulo: uses raw float seqSize for gapless loop
       nextOffset = ((nextOffset % seqSize) + seqSize) % seqSize;
       this.state.offset = nextOffset;
 
@@ -296,13 +327,16 @@ class LogoLoop {
       this.track.style.transform = transformValue;
     }
 
-    this.state.rafId = requestAnimationFrame(this.animate.bind(this));
+    this.state.rafId = requestAnimationFrame((ts) => this.animate(ts));
   }
 
   destroy() {
     if (this.state.rafId) cancelAnimationFrame(this.state.rafId);
     if (this.resizeObserver) this.resizeObserver.disconnect();
-    // remove event listeners if we added named functions... 
-    // anonymous ones here are hard to remove, but given the scope, it might be fine.
   }
+}
+
+// Export for usage if using modules, otherwise it stays global
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = LogoLoop;
 }
