@@ -1,150 +1,195 @@
 /**
  * pageTransition.js
- * Cinematic black overlay with "Welcome to My World 👀" text
- * that plays when navigating to subpages (projects, certifications).
+ * Circular iris-wipe from click point → Black screen → Typing animation
+ * → Navigate to destination page.
  */
 
 (function () {
-  // ── Create overlay DOM ────────────────────────────────────────────────────
-  const overlay = document.createElement('div');
-  overlay.id = 'page-transition-overlay';
-  overlay.innerHTML = `
-    <div id="pt-content">
-      <div id="pt-eyes">👀</div>
-      <div id="pt-line1">WELCOME TO</div>
-      <div id="pt-line2">MY WORLD</div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-
   // ── Inject styles ─────────────────────────────────────────────────────────
   const style = document.createElement('style');
   style.textContent = `
-    #page-transition-overlay {
+    #pt-overlay {
       position: fixed;
       inset: 0;
-      z-index: 99999;
+      z-index: 999999;
       background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
       pointer-events: none;
       opacity: 0;
-      transform: scaleY(0);
-      transform-origin: bottom center;
-      transition: none;
+      /* clip-path animated by JS */
     }
 
-    #page-transition-overlay.pt-enter {
-      animation: ptSlideIn 0.55s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+    #pt-overlay.active {
+      pointer-events: all;
+      opacity: 1;
     }
 
-    #page-transition-overlay.pt-exit {
-      animation: ptSlideOut 0.5s cubic-bezier(0.76, 0, 0.24, 1) forwards;
-    }
-
-    @keyframes ptSlideIn {
-      0%   { opacity: 1; transform: scaleY(0); transform-origin: bottom center; }
-      100% { opacity: 1; transform: scaleY(1); transform-origin: bottom center; }
-    }
-
-    @keyframes ptSlideOut {
-      0%   { opacity: 1; transform: scaleY(1); transform-origin: top center; }
-      100% { opacity: 1; transform: scaleY(0); transform-origin: top center; }
-    }
-
-    #pt-content {
+    #pt-text-wrap {
       text-align: center;
       opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.4s ease 0.25s, transform 0.4s ease 0.25s;
+      transform: translateY(16px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
     }
 
-    #page-transition-overlay.pt-enter #pt-content {
+    #pt-overlay.text-visible #pt-text-wrap {
       opacity: 1;
       transform: translateY(0);
     }
 
-    #pt-eyes {
-      font-size: clamp(3rem, 8vw, 6rem);
-      margin-bottom: 1rem;
-      animation: ptEyeBlink 1.2s ease-in-out infinite;
+    #pt-sub {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      letter-spacing: 0.55em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
       display: block;
     }
 
-    @keyframes ptEyeBlink {
-      0%, 90%, 100% { opacity: 1; }
-      95% { opacity: 0; }
-    }
-
-    #pt-line1 {
+    #pt-main {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(1rem, 3vw, 1.5rem);
-      letter-spacing: 0.5em;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    #pt-line2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3.5rem, 10vw, 8rem);
-      letter-spacing: 0.08em;
+      font-size: clamp(3.5rem, 9vw, 7.5rem);
+      letter-spacing: 0.06em;
       color: #fff;
-      line-height: 0.9;
+      line-height: 0.88;
       text-transform: uppercase;
+      white-space: nowrap;
+      display: block;
+    }
+
+    #pt-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: #eb7a14;
+      margin-left: 6px;
+      vertical-align: middle;
+      animation: ptBlink 0.7s step-end infinite;
+    }
+
+    @keyframes ptBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    #pt-eyes {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      display: block;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.35s ease 0.1s, transform 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.1s;
+    }
+
+    #pt-overlay.text-visible #pt-eyes {
+      opacity: 1;
+      transform: scale(1);
     }
   `;
   document.head.appendChild(style);
 
-  // ── Hook into subpage links ───────────────────────────────────────────────
-  const SUBPAGE_LINKS = ['projects.html', 'certifications.html', 'home.html'];
+  // ── Create overlay DOM ────────────────────────────────────────────────────
+  const overlay = document.createElement('div');
+  overlay.id = 'pt-overlay';
+  overlay.innerHTML = `
+    <div id="pt-text-wrap">
+      <span id="pt-eyes">👀</span>
+      <span id="pt-sub">Welcome to</span>
+      <span id="pt-main"><span id="pt-typed"></span><span id="pt-cursor"></span></span>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 
-  function isSubpageLink(href) {
-    if (!href) return false;
-    return SUBPAGE_LINKS.some(page => href.includes(page));
+  const typedEl  = document.getElementById('pt-typed');
+  const cursorEl = document.getElementById('pt-cursor');
+
+  // ── Typing engine ─────────────────────────────────────────────────────────
+  const FULL_TEXT = 'MY WORLD';
+
+  function typeText(onDone) {
+    let i = 0;
+    typedEl.textContent = '';
+    const iv = setInterval(() => {
+      typedEl.textContent = FULL_TEXT.slice(0, ++i);
+      if (i >= FULL_TEXT.length) {
+        clearInterval(iv);
+        onDone && setTimeout(onDone, 420); // short pause after done
+      }
+    }, 90); // typing speed per character
   }
 
-  function playTransition(destination) {
-    overlay.classList.remove('pt-exit');
-    overlay.classList.add('pt-enter');
-    overlay.style.pointerEvents = 'all';
+  // ── Circular iris wipe ───────────────────────────────────────────────────
+  // Uses clip-path: circle() expanding from click origin
+  function irisFill(originX, originY, onComplete) {
+    // Convert page coords → % relative to viewport
+    const pctX = ((originX / window.innerWidth)  * 100).toFixed(1) + '%';
+    const pctY = ((originY / window.innerHeight) * 100).toFixed(1) + '%';
 
-    // Navigate after the animation completes
-    setTimeout(() => {
-      window.location.href = destination;
-    }, 950);
+    // Final radius must cover the farthest corner
+    const maxR = Math.hypot(
+      Math.max(originX, window.innerWidth  - originX),
+      Math.max(originY, window.innerHeight - originY)
+    );
+    const finalR = (maxR / Math.min(window.innerWidth, window.innerHeight) * 100 + 10).toFixed(1) + '%';
+
+    overlay.classList.add('active');
+    overlay.style.clipPath = `circle(0% at ${pctX} ${pctY})`;
+
+    // Force reflow then animate
+    overlay.getBoundingClientRect();
+
+    overlay.style.transition = `clip-path 0.65s cubic-bezier(0.76, 0, 0.24, 1)`;
+    overlay.style.clipPath    = `circle(${finalR} at ${pctX} ${pctY})`;
+
+    setTimeout(onComplete, 680);
   }
+
+  // ── Main transition entry ─────────────────────────────────────────────────
+  function playTransition(destination, clickX, clickY) {
+    typedEl.textContent = '';
+
+    irisFill(clickX, clickY, () => {
+      // Show text
+      overlay.classList.add('text-visible');
+
+      // Start typing
+      typeText(() => {
+        // Wait a beat, then navigate
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 350);
+      });
+    });
+  }
+
+  // ── Intercept subpage links ───────────────────────────────────────────────
+  const SUBPAGES = ['projects.html', 'certifications.html', 'home.html'];
 
   document.addEventListener('click', function (e) {
     const link = e.target.closest('a[href]');
     if (!link) return;
-
     const href = link.getAttribute('href');
-    if (!isSubpageLink(href)) return;
+    if (!href || !SUBPAGES.some(p => href.includes(p))) return;
 
     e.preventDefault();
-    playTransition(href);
-  }, true); // Use capture phase so we intercept before any other handlers
+    e.stopPropagation();
 
-  // ── On page load: if coming from a subpage, play exit animation ──────────
-  // (This handles the "welcome back" feel, already resolved by particleEntry.js,
-  //  but we also animate the overlay out when landing on index.html from subpages)
-  const navEntries = performance.getEntriesByType('navigation');
-  const navType = navEntries.length > 0 ? navEntries[0].type : 'navigate';
-  const isFromSubpage = document.referrer && SUBPAGE_LINKS.some(p => document.referrer.includes(p));
+    const rect = link.getBoundingClientRect();
+    const cx   = rect.left + rect.width  / 2;
+    const cy   = rect.top  + rect.height / 2;
 
-  if (navType === 'back_forward' || isFromSubpage) {
-    // Briefly flash the overlay and exit — gives a clean "return" feel
-    overlay.classList.add('pt-enter');
-    overlay.style.pointerEvents = 'none';
-    setTimeout(() => {
-      overlay.classList.remove('pt-enter');
-      overlay.classList.add('pt-exit');
-      setTimeout(() => {
-        overlay.classList.remove('pt-exit');
-        overlay.style.opacity = '0';
-      }, 520);
-    }, 400);
-  }
+    playTransition(href, cx, cy);
+  }, true);
+
+  // ── Also intercept programmatic clicks (e.g. startWorksTransition) ──────
+  window._playPageTransition = function(destination, x, y) {
+    playTransition(
+      destination,
+      x != null ? x : window.innerWidth  / 2,
+      y != null ? y : window.innerHeight / 2
+    );
+  };
+
 })();
