@@ -1,7 +1,8 @@
 /**
  * pageTransition.js
- * Circular iris-wipe from click point → Black screen → Bebas Neue
- * dual-line typing animation ("WELCOME TO" then "MY WORLD") → 2s pause → navigate.
+ * Circular iris-wipe from click point → Theme-based background
+ * Black theme: dual-line typing animation ("WELCOME TO" then "MY WORLD")
+ * Orange theme: no text, just fill → quick navigate.
  */
 
 (function () {
@@ -12,7 +13,7 @@
       position: fixed;
       inset: 0;
       z-index: 999999;
-      background: #000;
+      background: var(--pt-bg, #000);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -128,7 +129,7 @@
   }
 
   // ── Iris fill ─────────────────────────────────────────────────────────────
-  function irisFill(ox, oy, onComplete) {
+  function irisFill(ox, oy, theme, onComplete) {
     const pctX = ((ox / window.innerWidth)  * 100).toFixed(2) + '%';
     const pctY = ((oy / window.innerHeight) * 100).toFixed(2) + '%';
 
@@ -138,6 +139,9 @@
     );
     const finalR = ((maxR / Math.min(window.innerWidth, window.innerHeight)) * 110).toFixed(2) + '%';
 
+    // Set theme color
+    overlay.style.setProperty('--pt-bg', theme === 'orange' ? '#eb7a14' : '#000');
+    
     overlay.classList.add('active');
     overlay.style.clipPath = `circle(0% at ${pctX} ${pctY})`;
     overlay.getBoundingClientRect(); // force reflow
@@ -149,15 +153,24 @@
   }
 
   // ── Main transition ───────────────────────────────────────────────────────
-  function playTransition(destination, cx, cy) {
+  function playTransition(destination, cx, cy, theme = 'black') {
     // Reset
     typed1.textContent = '';
     typed2.textContent = '';
     caret1.style.display = 'inline-block';
     caret2.style.display = 'none';
+    overlay.classList.remove('text-visible');
 
-    irisFill(cx, cy, () => {
-      // Reveal text container
+    irisFill(cx, cy, theme, () => {
+      // If orange, skip text and navigate faster
+      if (theme === 'orange') {
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 350);
+        return;
+      }
+
+      // Default Black Theme: Reveal text container and type
       overlay.classList.add('text-visible');
 
       // Step 1: type "WELCOME TO" on line 1
@@ -189,17 +202,23 @@
     e.preventDefault();
     e.stopPropagation();
 
+    // Determine theme
+    const isCert = href.includes('certifications.html');
+    const theme  = isCert ? 'orange' : 'black';
+
     const rect = link.getBoundingClientRect();
-    playTransition(href, rect.left + rect.width / 2, rect.top + rect.height / 2);
+    playTransition(href, rect.left + rect.width / 2, rect.top + rect.height / 2, theme);
   }, true);
 
   // ── Global API for programmatic navigation ────────────────────────────────
-  window._playPageTransition = function (destination, x, y) {
+  window._playPageTransition = function (destination, x, y, theme = 'black') {
     playTransition(
       destination,
       x != null ? x : window.innerWidth  / 2,
-      y != null ? y : window.innerHeight / 2
+      y != null ? y : window.innerHeight / 2,
+      theme
     );
   };
 
 })();
+

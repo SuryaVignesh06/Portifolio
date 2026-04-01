@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Surya Vignesh | AI/ML Developer & CS Engineer</title>
+  <title>Venkata SuryaVignesh</title>
+  <link rel="icon" href="logoo.png">
   <meta name="description"
     content="Portfolio of Chikkala Venkata Surya Vignesh — AI/ML Developer, Full Stack Engineer, and CS student at VIT with CGPA 9.18. Building intelligent systems and real-world AI products." />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -717,18 +718,21 @@
     /* Bottom Navigation (Skeuomorphic) */
     .bottom-nav {
       position: fixed;
-      bottom: 28px;
+      bottom: 12px;
       left: 50% !important;
       transform: translateX(-50%) translateY(80px) translateZ(0) !important;
       /* Include GPU hint here */
-      background: linear-gradient(180deg, #fdfdfd 0%, #e0e0e0 100%);
-      border: 1px solid #b3b3b3;
-      border-top: 1px solid #ffffff;
-      border-bottom: 1px solid #999999;
+      background: linear-gradient(180deg, rgba(253,253,253,0.85) 0%, rgba(224,224,224,0.85) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(179,179,179,0.6);
+      border-top: 1px solid rgba(255,255,255,0.8);
+      border-bottom: 1px solid rgba(153,153,153,0.6);
       box-shadow:
-        0 10px 20px rgba(0, 0, 0, 0.2),
+        0 10px 30px rgba(0, 0, 0, 0.18),
+        0 2px 8px rgba(0, 0, 0, 0.08),
         inset 0 2px 4px rgba(255, 255, 255, 0.8),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+        inset 0 -2px 4px rgba(0, 0, 0, 0.08);
       border-radius: 999px;
       padding: 10px 20px;
       z-index: 9999;
@@ -739,6 +743,39 @@
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       backface-visibility: hidden;
       margin: 0 !important;
+    }
+
+    /* Full realistic "Liquid Glass" blur extending to side edges and downwards */
+    .bottom-nav::before {
+      content: '';
+      position: absolute;
+      top: -45px; /* Maximum refraction span */
+      bottom: -15px; /* Reaching the very bottom edge */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      pointer-events: none;
+      z-index: -2; /* Placed behind the pill */
+      /* Liquid Glass: Maximum intense blur + extreme saturation for realistic light refraction */
+      backdrop-filter: blur(220px) saturate(450%) contrast(85%) brightness(1.1);
+      -webkit-backdrop-filter: blur(220px) saturate(450%) contrast(85%) brightness(1.1);
+      background: transparent; /* Fully transparent base as requested for realism */
+      mask-image: linear-gradient(to bottom, transparent 0%, black 50px);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 50px);
+      border-top: 1px solid rgba(255, 255, 255, 0.05); /* Extremely fine refraction edge */
+    }
+
+    /* Addition of actual grain/texture via an overlay for realism */
+    .bottom-nav::after {
+      content: '';
+      position: absolute;
+      inset: -45px -50vw -15px;
+      pointer-events: none;
+      z-index: -1;
+      filter: url(#noise);
+      opacity: 0.22; /* Slightly increased grain for tactile realism */
+      mask-image: linear-gradient(to bottom, transparent 0%, black 50px);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 50px);
     }
 
     .bottom-nav.visible {
@@ -1109,6 +1146,27 @@
       text-align: right;
       /* To right side fully */
       padding-right: 2vw;
+    }
+
+    /* Hero Logo Styling */
+    .hero-brand-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(80px, 20vw, 220px); /* Progressive sizing */
+      height: auto;
+      z-index: 10;
+      filter: drop-shadow(0 0 20px rgba(235, 122, 20, 0.4));
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .hero-brand-logo {
+        top: 45%;
+        width: 100px;
+      }
     }
 
     .hero-massive-overlay.outline h2 {
@@ -3163,6 +3221,12 @@
         <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -15" result="goo" />
         <feComposite in="SourceGraphic" in2="goo" operator="atop" />
       </filter>
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="0.06" />
+        </feComponentTransfer>
+      </filter>
     </defs>
   </svg>
 
@@ -3242,66 +3306,6 @@
         </a>
       </div>
 
-      <!-- More to Discover Button -->
-      <div class="hero-discover-wrap">
-        <a href="projects.html" id="moreDiscoverBtn" class="hero-discover-btn" aria-label="More to Discover">
-          <span class="hero-discover-label">MORE TO DISCOVER</span>
-          <svg class="hero-discover-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </a>
-      </div>
-
-      <style>
-        .hero-discover-wrap {
-          position: absolute;
-          bottom: 36px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 20;
-        }
-        .hero-discover-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px 36px;
-          border: 1.5px solid rgba(0,0,0,0.25);
-          border-radius: 999px;
-          background: rgba(255,255,255,0.65);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          text-decoration: none;
-          color: #000;
-          transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .hero-discover-btn:hover {
-          background: #000;
-          border-color: #000;
-          color: #fff;
-          transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.18);
-        }
-        .hero-discover-btn:hover .hero-discover-label,
-        .hero-discover-btn:hover .hero-discover-arrow {
-          color: #fff;
-        }
-        .hero-discover-label {
-          font-family: 'Bebas Neue', sans-serif;
-          font-size: 1rem;
-          letter-spacing: 0.25em;
-          text-transform: uppercase;
-          transition: color 0.3s ease;
-        }
-        .hero-discover-arrow {
-          transition: color 0.3s ease, transform 0.3s ease;
-          flex-shrink: 0;
-        }
-        .hero-discover-btn:hover .hero-discover-arrow {
-          transform: translateX(4px);
-        }
-      </style>
     </div>
   </section>
 
